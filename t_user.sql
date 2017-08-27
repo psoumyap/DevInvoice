@@ -26,23 +26,42 @@ SET time_zone = "+00:00";
 -- Table structure for table `t_user`
 --
 
-CREATE TABLE IF NOT EXISTS `t_user` (
-  `user_id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL,
-  PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+CREATE TABLE t_user (
+  user_ID int(11) NOT NULL AUTO_INCREMENT,
+  Name varchar(255) NOT NULL,
+  email varchar(255),
+  duedate DATE,
+  PRIMARY KEY (user_ID)
+);
+
+
+CREATE TABLE t_lineitems (
+user_ID int(11),
+line_ID int(11) NOT NULL AUTO_INCREMENT,
+description varchar(255) not null,
+amount int(10) NOT NULL,
+total int(10) NOT NULL,
+PRIMARY KEY (line_ID),
+FOREIGN KEY (user_ID) REFERENCES t_user(user_ID)
+);
 
 --
 -- Dumping data for table `t_user`
 --
 
-INSERT INTO `t_user` (`user_id`, `name`, `email`, `password`) VALUES
-(1, 'Mas Banyar', 'banyar@yahoo.com', '23235645yghgf'),
-(2, 'Mas Mapmup', 'mapmup@gmail.com', 'dncskdcndscsdcdsc'),
-(4, 'Boronong', 'borononn@yahoo.com', '032bcsjdncsdjc3223'),
-(5, 'Nadya Ek', 'nadya@yahoo.com', 'bonbon032932');
+INSERT INTO t_user (`user_id`, `name`, `email`, `duedate`) VALUES
+(1, 'Mas Banyar', 'banyar@yahoo.com', '07-10-15'),
+(2, 'Mas Mapmup', 'mapmup@gmail.com', '07-10-15'),
+(4, 'Boronong', 'borononn@yahoo.com', '07-10-15'),
+(5, 'Nadya Ek', 'nadya@yahoo.com', '07-10-15');
+
+INSERT INTO t_lineitems (`user_id`, `description`, `amount`, `total`) VALUES
+(1, 'Invoice1', 30, 0),
+(1, 'Invoice2', 60, 0);
+
+
+
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

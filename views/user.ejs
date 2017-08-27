@@ -3,65 +3,48 @@
     <head>
         <title><%=title%></title>
         <script type="text/javascript" src="/../js/jquery-1.10.2.min.js"></script>
-        <link rel="stylesheet" href="/../css/style.css">
+        <link rel="stylesheet" href="/../css/style.css">    
     </head>
 <body>
-<div class="data-table">
-    <table border="1" cellpadding="7" cellspacing="7">
-        <tr>
-            <th width="50px">No</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Password</th>
-            <th>Action</th>
-        </tr>
-                       
-        <% if(data.length){ 
-                        
-         for(var i = 0;i < data.length;i++) { %>
-         
-        <tr>
-            <td><%=(i+1)%></td>
-            <td><%=data[i].name%></td>
-            <td><%=data[i].email%></td>
-            <td><%=data[i].password%></td>
-            <td>
-                <a class="a-inside edit" href="/api/user/<%=data[i].user_id%>">Edit</a>
-               
-                <a class="a-inside delete" href="javascript:void(0)" onClick="deleteUser(<%=data[i].user_id%>)">Delete</a>
-               
-            </td>
-        </tr>
-    <% }
-    
-     }else{ %>
-         <tr>
-            <td colspan="5">No Data</td>
-         </tr>
-    <% } %>
-                                      
-    </table>
-</div>
 <div class="page-data">
     
     <form method="post" action="" id="the-form">
         <table cellpadding="11">
         <tr>
-            <td class="label">Name</td><td>: <input type="text" name="name"></td>
+            <td class="label">Name</td><td> <input type="text" name="name"></td>
          </tr>
         <tr>
-            <td class="label">Email</td><td>: <input type="text" name="email"></td>
+            <td class="label">Email</td><td> <input type="text" name="email"></td>
          </tr>
           <tr>
-            <td class="label">Password</td><td>: <input type="password" name="password"></td>
+            <td class="label">Due Date</td><td> <input type="date" name="date"></td>
          </tr>
-         <tr>
-            <td class="label"></td>
-            <td>
-                &nbsp; <input type="button" value="Save" onClick="saveUser()">
-            </td>
-         </tr>
-        </table>
+     </table>
+
+        <table class="line_items" cellpadding="11">
+        <tr>
+            <td class="label">Description</td> <td class="label">Amount</td>
+        </tr>
+        <tr>
+            <td> <input type="text" name="description[]"></td> <td> <input type="text" name="amount[]" id="amt"></td>
+        </tr> 
+    </table>
+    <br>
+    <br>
+   
+    <button class="add">+</button>
+        <table cellpadding="11">
+        <tr>
+        <!--<td class="label"></td>-->
+        <th>Total</th>
+        <td><span data-prefix>$</span><span>0.00</span></td>
+        <td>
+      
+            &nbsp; <input type="button" value="Save" onClick="saveUser()">
+
+        </td>
+        </tr>
+    </table>
     </form>
 </div>
 <div class="page-data">
@@ -69,6 +52,24 @@
 </div>
 
 <script>
+
+//Add and Cut LineItems
+$(document).ready(function() {
+    var max_fields      = 10; 
+    var li              = $(".line_items"); 
+    var add_button      = $(".add"); 
+    var x = 1; 
+    $(add_button).click(function(e){ 
+        e.preventDefault();
+        if(x<max_fields){
+            x++; 
+            $(li).append('<div><input type="text" name="description[]"/>&emsp;<input type="text" name="amount[]"/><a href="#" class="cut">-</a></div>');
+        }
+    });
+        $(li).on("click",".cut", function(e){ 
+        e.preventDefault(); $(this).parent('div').remove(); x--;
+    })
+});
 
     function saveUser(){
        

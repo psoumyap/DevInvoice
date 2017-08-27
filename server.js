@@ -24,7 +24,7 @@ app.use(
         host     : 'localhost',
         user     : 'root',
         password : 'mysql',
-        database : 'test',
+        database : 'invoice',
         debug    : false //set true if you wanna see debug logger
     },'request')
 
@@ -84,7 +84,8 @@ curut.post(function(req,res,next){
     //validation
     req.assert('name','Name is required').notEmpty();
     req.assert('email','A valid email is required').isEmail();
-    req.assert('password','Enter a password 6 - 20').len(6,20);
+    req.assert('description','Description is required').notEmpty();
+    req.assert('amount','Amount is required').notEmpty();
 
     var errors = req.validationErrors();
     if(errors){
@@ -93,10 +94,16 @@ curut.post(function(req,res,next){
     }
 
     //get data
-    var data = {
+    var data1 = {
         name:req.body.name,
         email:req.body.email,
-        password:req.body.password
+        duedate:req.body.duedate
+     };
+
+     var data2 = {
+        description:req.body.description,
+        amount:req.body.amount,
+        total:req.body.total
      };
 
     //inserting into mysql
@@ -104,17 +111,28 @@ curut.post(function(req,res,next){
 
         if (err) return next("Cannot Connect");
 
-        var query = conn.query("INSERT INTO t_user set ? ",data, function(err, rows){
+        var query1 = conn.query("INSERT INTO t_user set ? ",data1, function(err, rows){
 
            if(err){
                 console.log(err);
                 return next("Mysql error, check your query");
            }
 
-          res.sendStatus(200);
+          //res.sendStatus(200);
 
         });
 
+        var query2 = conn.query("INSERT INTO t_lineitems set ? ",data2, function(err, rows){
+
+           if(err){
+                console.log(err);
+                return next("Mysql error, check your query");
+           }
+
+         // res.sendStatus(200);
+
+        });
+        res.sendStatus(200);
      });
 
 });
@@ -233,7 +251,7 @@ curut2.delete(function(req,res,next){
 app.use('/api', router);
 
 //start Server
-var server = app.listen(3000,function(){
+var server = app.listen(8080,function(){
 
    console.log("Listening to port %s",server.address().port);
 
