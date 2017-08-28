@@ -108,28 +108,43 @@ curut.post(function(req,res,next){
     //inserting into mysql
     req.getConnection(function (err, conn){
 
-        var x =0;
+        var userExists =false;
 
         if (err) return next("Cannot Connect");
 
-        var query1 = conn.query("INSERT INTO t_user set ? ",data1, function(err, rows){
-           if(err){
-                console.log(err);
-                return next("Mysql error, check your query");
-           }
-       });
-         /*var user_id = conn.query("SELECT LAST_INSERT_ID()");
-
-
-           var selquery1 = conn.query("SELECT USER_ID FROM t_user WHERE NAME = ? ",[data1.name], function(err,rows){
+        var selquery1 = conn.query("SELECT USER_ID FROM t_user WHERE email = ? ",[data1.email], function(err,rows){
 
             if(err){
                 console.log(err);
                 return next("Mysql error, check your query");
-            }
-        });*/
+            } else {
+                console.log("you re in elsesss", rows);
 
-        var query2 = conn.query("INSERT INTO t_lineitems set ? ",data2, function(err, rows){
+                if (rows.length > 0) {
+                console.log("you re in elsesss", rows);
+                userExists = true;
+                data2.user_ID= rows[1].USER_ID;
+            }
+            }
+        });
+
+        if ( !userExists ) {
+        var query1 = conn.query("INSERT INTO t_user set ? ",data1, function(err, rows){
+           if(err){
+                console.log(err);
+                return next("Mysql error, check your query");
+           } else {
+            console.log("User inserted.");
+           }
+       });
+    }
+
+        
+        //var user_id = conn.query("SELECT LAST_INSERT_ID()");
+
+
+        var query2 = conn.query("INSERT INTO t_lineitems set ? ", data2, function(err, rows){
+           console.log("data2 : ", data2);
 
            if(err){
                 console.log(err);
