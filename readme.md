@@ -6,11 +6,13 @@ Installation steps are mentioned below
 
 ## Installation
 Clone or download zip to your machine then hit this :
-
+  git@github.com:psoumyap/DevInvoice.git
+  
+  cd to the above directory
 
     cd DevInvoice
 
-then
+
 
     npm install
 
