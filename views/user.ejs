@@ -10,39 +10,36 @@
 <div class="page-data">
     
     <form method="post" action="" id="the-form">
-        <table cellpadding="11">
+    <table cellpadding="11">
         <tr>
-            <td class="label">Name</td><td> <input type="text" name="name"></td>
+            <td class="label">Name</td><td> <input type="text" name="name" value="someName"></td>
          </tr>
         <tr>
-            <td class="label">Email</td><td> <input type="text" name="email"></td>
+            <td class="label">Email</td><td> <input type="text" name="email" value="someName@gmail.com"></td>
          </tr>
           <tr>
-            <td class="label">Due Date</td><td> <input type="date" name="date"></td>
+            <td class="label">Due Date</td><td> <input type="date" name="date" value="2017/08/25"></td>
          </tr>
      </table>
 
-       <table class="line_items" cellpadding="11">
+    <table class="line_items" id = "lit" cellpadding="11">
         <tr>
             <td class="label">Description</td> <td class="label">Amount</td>
         </tr>
         <tr>
-            <td> <input type="text" name="description[]"></td> <td> <input type="text" name="amount[]" id="amt"></td>
+            <td> <input type="text" name="description[]"></td> <td> <input type="text" name="amount[]" class="amount"></td>
         </tr> 
     </table>
     
-        <button class="add">+</button>
-        <table cellpadding="11">
-        <tr>
-        <!--<td class="label"></td>-->
-        <th>Total</th>
-        <td><span data-prefix>$</span><span>0.00</span></td>
-        <td>
-            &nbsp; <input type="button" value="Save" onClick="saveUser()">
+    <br>
+    <button type="button" title="Add">Add</button>
+    <br>    
+    <br/>Total:
+    <input type="text" id="total" />
+    <br>
+    <input type="button" value="Save" onClick="saveUser()">
 
-        </td>
-        </tr>
-    </table>
+    
     </form>
 </div>
 <div class="page-data">
@@ -52,25 +49,48 @@
 <script>
 
 //Add and Cut LineItems
-$(document).ready(function() {
-    var max_fields      = 10; 
-    var li              = $(".line_items"); 
-    var add_button      = $(".add"); 
-    var x = 1; 
-    $(add_button).click(function(e){ 
-        e.preventDefault();
-        if(x<max_fields){
-            x++; 
-            $(li).append('<div><input type="text" name="description[]"/>&emsp;<input type="text" name="amount[]"/><a href="#" class="cut">-</a></div>');
-        }
-    });
-        $(li).on("click",".cut", function(e){ 
-        e.preventDefault(); $(this).parent('div').remove(); x--;
-    })
-
+$(document).ready(function() {  
+    $(document).on("keyup", ".amount", calculateSum);
+    $("button").click(function() { addrow('lit') });
 
 });
 
+
+function calculateSum() {
+
+    var sum = 0;
+    $(".amount").each(function () {
+
+        if (!isNaN(this.value) && this.value.length != 0) {
+            sum += parseFloat(this.value);
+        }
+
+    });
+    $("#total").val(sum.toFixed(2));
+}
+
+function addrow(tableID) {
+
+    var table = document.getElementById(tableID);
+
+    var rowCount = table.rows.length;
+    var row = table.insertRow(rowCount);
+
+    var colCount = table.rows[1].cells.length;
+
+    for (var i = 0; i < colCount; i++) {
+
+        var newcell = row.insertCell(i);
+
+        newcell.innerHTML = table.rows[1].cells[i].innerHTML;
+        switch (newcell.childNodes[0].type) {
+            case "text":
+                newcell.childNodes[0].value = "";
+                break;
+
+        }
+    }
+}
 /*function generateTableRow() {
     var emptyColumn = document.createElement('tr');
 

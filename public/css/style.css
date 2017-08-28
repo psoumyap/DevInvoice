@@ -5,7 +5,7 @@ ul.err-area li{color:red}
 .page-data{float:left;display:inline-block;}
 
 
-.add, 
+.add
 {
 	border-width: 1px;
 	display: block;
@@ -16,7 +16,7 @@ ul.err-area li{color:red}
 	width: 0.6em;
 }
 
-.add,
+.add
 {
 	background: #9AF;
 	box-shadow: 0 1px 2px rgba(0,0,0,0.2);
