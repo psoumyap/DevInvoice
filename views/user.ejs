@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><%=title%></title>
+        <title>Invoice></title>
+        <h1>Create Invoice</h1>
         <script type="text/javascript" src="/../js/jquery-1.10.2.min.js"></script>
         <link rel="stylesheet" href="/../css/style.css">    
     </head>
@@ -21,7 +22,7 @@
          </tr>
      </table>
 
-        <table class="line_items" cellpadding="11">
+       <table class="line_items" cellpadding="11">
         <tr>
             <td class="label">Description</td> <td class="label">Amount</td>
         </tr>
@@ -29,17 +30,14 @@
             <td> <input type="text" name="description[]"></td> <td> <input type="text" name="amount[]" id="amt"></td>
         </tr> 
     </table>
-    <br>
-    <br>
-   
-    <button class="add">+</button>
+    
+        <button class="add">+</button>
         <table cellpadding="11">
         <tr>
         <!--<td class="label"></td>-->
         <th>Total</th>
         <td><span data-prefix>$</span><span>0.00</span></td>
         <td>
-      
             &nbsp; <input type="button" value="Save" onClick="saveUser()">
 
         </td>
@@ -69,7 +67,144 @@ $(document).ready(function() {
         $(li).on("click",".cut", function(e){ 
         e.preventDefault(); $(this).parent('div').remove(); x--;
     })
+
+
 });
+
+/*function generateTableRow() {
+    var emptyColumn = document.createElement('tr');
+
+    emptyColumn.innerHTML = '<td><a class="cut">-</a><span contenteditable></span></td>' +
+        '<td><span contenteditable></span></td>' +
+        '<td><span data-prefix>$</span><span contenteditable>0.00</span></td>' +
+        '<td><span contenteditable>0</span></td>' +
+        '<td><span data-prefix>$</span><span>0.00</span></td>';
+
+    return emptyColumn;
+}
+
+function parseFloatHTML(element) {
+    return parseFloat(element.innerHTML.replace(/[^\d\.\-]+/g, '')) || 0;
+}
+
+function parsePrice(number) {
+    return number.toFixed(2).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1,');
+}
+
+function updateNumber(e) {
+    var
+    activeElement = document.activeElement,
+    value = parseFloat(activeElement.innerHTML),
+    wasPrice = activeElement.innerHTML == parsePrice(parseFloatHTML(activeElement));
+
+    if (!isNaN(value) && (e.keyCode == 38 || e.keyCode == 40 || e.wheelDeltaY)) {
+        e.preventDefault();
+
+        value += e.keyCode == 38 ? 1 : e.keyCode == 40 ? -1 : Math.round(e.wheelDelta * 0.025);
+        value = Math.max(value, 0);
+
+        activeElement.innerHTML = wasPrice ? parsePrice(value) : value;
+    }
+
+    updateInvoice();
+}
+
+
+/* Update Invoice
+/* ========================================================================== */
+
+/*function updateInvoice() {
+    var total = 0;
+    var cells, price, total, a, i;
+
+    // update inventory cells
+    // ======================
+
+    for (var a = document.querySelectorAll('table.inventory tbody tr'), i = 0; a[i]; ++i) {
+        // get inventory row cells
+        cells = a[i].querySelectorAll('span:last-child');
+
+        // set price as cell[2] * cell[3]
+        //price = parseFloatHTML(cells[2]) * parseFloatHTML(cells[3]);
+
+        // add price to total
+        total += price;
+
+        // set row total
+        cells[1].innerHTML = price;
+    }
+
+    // update balance cells
+    // ====================
+
+    // get balance cells
+    cells = document.querySelectorAll('table.balance td:last-child span:last-child');
+
+    // set total
+    cells[0].innerHTML = total;
+
+    // set balance and meta balance
+    //cells[2].innerHTML = document.querySelector('table.meta tr:last-child td:last-child span:last-child').innerHTML = parsePrice(total - parseFloatHTML(cells[1]));
+
+    // update prefix formatting
+    // ========================
+
+    var prefix = document.querySelector('#prefix').innerHTML;
+    for (a = document.querySelectorAll('[data-prefix]'), i = 0; a[i]; ++i) a[i].innerHTML = prefix;
+
+    // update price formatting
+    // =======================
+
+    for (a = document.querySelectorAll('span[data-prefix] + span'), i = 0; a[i]; ++i) if (document.activeElement != a[i]) a[i].innerHTML = parsePrice(parseFloatHTML(a[i]));
+}
+
+/* On Content Load
+/* ========================================================================== */
+
+/*function onContentLoad() {
+    updateInvoice();
+
+    var
+    input = document.querySelector('input'),
+    image = document.querySelector('img');
+
+    function onClick(e) {
+        var element = e.target.querySelector('[contenteditable]'), row;
+
+        element && e.target != document.documentElement && e.target != document.body && element.focus();
+
+        if (e.target.matchesSelector('.add')) {
+            document.querySelector('table.inventory tbody').appendChild(generateTableRow());
+        }
+        else if (e.target.className == 'cut') {
+            row = e.target.ancestorQuerySelector('tr');
+
+            row.parentNode.removeChild(row);
+        }
+
+        updateInvoice();
+    }
+} */
+
+
+  /* $("input").change(function(){ 
+        console.log("in total");
+        var total=0;
+        $("input[name=amount]").each(function(){
+            total = total + parseInt($(this).val());
+            console.log("totl is" + total);
+        })
+        $("input[name=total]").val(total);
+    });*/
+/*$(document).ready(function(e) {
+  
+    $("input").change(function(){ 
+        var total=0;
+        $("input[name=amount[]]").each(function(){
+            total = total + parseInt($(this).val());
+        })
+        $("input[name=total]").val(total);
+});*/
 
     function saveUser(){
        
