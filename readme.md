@@ -20,8 +20,13 @@ Installation steps are mentioned below
         database:'invoice'
 	
 5. Create a database like below
-   create database invoice;
-6. USE invoice, copy the scripts from t_user.sql and run it in mysql.
+
+   'create database invoice';
+   
+6. Use the database just created by 
+     'USE invoice';
+     
+7. Copy the scripts from t_user.sql and run it in mysql.
    Now you have tables created.
    
  ## Execution
