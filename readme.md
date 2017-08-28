@@ -1,6 +1,8 @@
-This is an example of RESTful CRUD in Node.js n mySQL.
+This is simple html based invoice.
 
-Installation, and tutorial here : http://teknosains.com/i/restful-crud-example-with-nodejs-and-mysql 
+A simple rest based Node JS is created using Express framework
+
+Installation, and tutorial here : 
 
 Live DEMO: http://teknosains.com/i/simple-crud-nodejs-mysql
 

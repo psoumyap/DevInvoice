@@ -71,7 +71,7 @@ curut.get(function(req,res,next){
                 return next("Mysql error, check your query");
             }
 
-            res.render('user',{title:"RESTful Crud Example",data:rows});
+            res.render('user',{title:"Invoice",data:rows});
 
          });
 
@@ -102,25 +102,32 @@ curut.post(function(req,res,next){
 
      var data2 = {
         description:req.body.description,
-        amount:req.body.amount,
-        total:req.body.total
+        amount:req.body.amount
      };
 
     //inserting into mysql
     req.getConnection(function (err, conn){
 
+        var x =0;
+
         if (err) return next("Cannot Connect");
 
         var query1 = conn.query("INSERT INTO t_user set ? ",data1, function(err, rows){
-
            if(err){
                 console.log(err);
                 return next("Mysql error, check your query");
            }
+       });
+         /*var user_id = conn.query("SELECT LAST_INSERT_ID()");
 
-          //res.sendStatus(200);
 
-        });
+           var selquery1 = conn.query("SELECT USER_ID FROM t_user WHERE NAME = ? ",[data1.name], function(err,rows){
+
+            if(err){
+                console.log(err);
+                return next("Mysql error, check your query");
+            }
+        });*/
 
         var query2 = conn.query("INSERT INTO t_lineitems set ? ",data2, function(err, rows){
 
@@ -129,12 +136,11 @@ curut.post(function(req,res,next){
                 return next("Mysql error, check your query");
            }
 
-         // res.sendStatus(200);
-
+        // res.sendStatus(200);
         });
         res.sendStatus(200);
-     });
 
+});
 });
 
 
