@@ -5,8 +5,15 @@ A simple rest based Node JS is created using Express framework
 Installation steps are mentioned below
 
 ## Installation
-Clone or download zip to your machine then hit this :
-  git@github.com:psoumyap/DevInvoice.git
+1. git clone git@github.com:psoumyap/DevInvoice.git
+2. cd DevInvoice
+3. Install mysql database
+4. Change the mysql password by 
+   ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
+4. Create a database like below
+   create database invoice;
+5. USE invoice
+   
   
   cd to the above directory
 
