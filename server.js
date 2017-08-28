@@ -97,7 +97,7 @@ curut.post(function(req,res,next){
     var data1 = {
         name:req.body.name,
         email:req.body.email,
-        duedate:req.body.duedate
+        duedate:req.body.date
      };
 
      var data2 = {
@@ -139,7 +139,7 @@ curut.post(function(req,res,next){
        });
     }
 
-        
+
         //var user_id = conn.query("SELECT LAST_INSERT_ID()");
 
 
