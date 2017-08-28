@@ -6,34 +6,33 @@ Installation steps are mentioned below
 
 ## Installation
 1. git clone git@github.com:psoumyap/DevInvoice.git
-2. cd DevInvoice
-3. Install mysql database
-4. Change the mysql password by 
-   ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
-4. Create a database like below
-   create database invoice;
-5. USE invoice
+2. cd DevInvoice and run npm install.
+3. Install mysql database.
+4. In another terminal, change the mysql password by 
+   ALTER USER 'root'@'localhost' IDENTIFIED BY 'mysql';
    
-  
-  cd to the above directory
-
-    cd DevInvoice
-
-
-
-    npm install
-
-## Configuration (database)
-server.js
-
+   Configuration would look like below.
+   
         host: 'localhost',
         user: 'root',
         password : 'mysql',
         port : 8080, //port mysql
-        database:'invoice'	
-
+        database:'invoice'
 	
-You have to create a database named 'invoice'
+5. Create a database like below
+   create database invoice;
+6. USE invoice, copy the scripts from t_database.sql and run it in mysql.
+   Now you have tables created.
+   
+ ## Execution
+   
+1. In the terminal run 'Node Server.js'.
+2. Hit the browser with url localhost:8080/api/user.
+3. Enter the data in the form and click on save.
+4. Open the terminal with mysql command prompt and verify that data is inserted in below tables
+    t_user and t_lineitems.
 
-## Open your Browser
-And type: localhost:8080/api/user
+
+
+   
+  
