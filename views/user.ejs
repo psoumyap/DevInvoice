@@ -4,22 +4,22 @@
         <title>Invoice></title>
         <h1>Create Invoice</h1>
         <script type="text/javascript" src="/../js/jquery-1.10.2.min.js"></script>
-        <script type="text/javascript" src="invoice.js"></script>
-        <link rel="stylesheet" href="/../css/style.css">    
+        <script type="text/javascript" src="/../js/invoice.js"></script>
+        <link rel="stylesheet" href="/../css/style.css">
     </head>
 <body>
 <div class="page-data">
-    
+
     <form method="post" action="" id="the-form">
     <table cellpadding="11">
         <tr>
-            <td class="label">Name</td><td> <input type="text" name="name" value="someName"></td>
+            <td class="label">Name</td><td> <input type="text" name="name"></td>
          </tr>
         <tr>
-            <td class="label">Email</td><td> <input type="text" name="email" value="someName@gmail.com"></td>
+            <td class="label">Email</td><td> <input type="text" name="email"></td>
          </tr>
           <tr>
-            <td class="label">Due Date</td><td> <input type="date" name="date" value="2017/08/25"></td>
+            <td class="label">Due Date</td><td> <input type="date" name="date"></td>
          </tr>
      </table>
 
@@ -28,19 +28,21 @@
             <td class="label">Description</td> <td class="label">Amount</td>
         </tr>
         <tr>
-            <td> <input type="text" name="description[]" value="someDesc"></td> <td> <input type="text" name="amount[]" class="amount" value="10"></td>
-        </tr> 
+            <td> <input type="text" name="description[]"></td> <td> <input type="text" name="amount[]" class="amount"></td>
+        </tr>
     </table>
-    
     <br>
-    <button type="button" title="Add">Add</button>
-    <br>    
-    <br/>Total:
-    <input type="text" id="total" />
     <br>
-    <input type="button" value="Save" onClick="saveUser()">
+    <button type="button" title="Add" class ="add">+</button>
+    <br>
+    <br/>
+    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Total: <input type="text" id="total" />
+    <br>
+    <br>
+    <br>
+    <input type="button" value="Send" onClick="saveUser()">
 
-    
+
     </form>
 </div>
 <div class="page-data">
@@ -50,7 +52,7 @@
 <script>
 
 //Add and Cut LineItems
-$(document).ready(function() {  
+$(document).ready(function() {
     $(document).on("keyup", ".amount", calculateSum);
     $("button").click(function() { addrow('lit') });
 
@@ -95,44 +97,44 @@ function addrow(tableID) {
 
 
     function saveUser(){
-       
+
        $.ajax({
-        
+
         url:"/api/user",
         type:"post",
         data:$("#the-form").serialize(),
         success:function(res){
-            
+
             window.location.reload();
             return false;
         },
         error:function(xhr, status, error){
-            
+
             console.log(xhr.responseText);
             var err = '';
             $.each(JSON.parse(xhr.responseText) , function(i, item) {
-               
+
                  err +='<li>'+item.msg+'</li>';
             });
-            $(".err-area").html(err);    
+            $(".err-area").html(err);
             return false;
         }
-        
+
        });
     }
-    
+
     function deleteUser(user_id){
-    
+
         $.ajax({
             url:"/api/user/"+user_id,
             type: 'DELETE',
             success: function(res) {
-                
+
                 window.location.reload();
                 return false;
             },
             error:function(xhr, status, error){
-            
+
                 console.log(xhr.responseText);
                 alert("Error deleting");
                 return false;
