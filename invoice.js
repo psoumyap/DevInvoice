@@ -1,53 +1,3 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Invoice></title>
-        <h1>Create Invoice</h1>
-        <script type="text/javascript" src="/../js/jquery-1.10.2.min.js"></script>
-        <script type="text/javascript" src="invoice.js"></script>
-        <link rel="stylesheet" href="/../css/style.css">    
-    </head>
-<body>
-<div class="page-data">
-    
-    <form method="post" action="" id="the-form">
-    <table cellpadding="11">
-        <tr>
-            <td class="label">Name</td><td> <input type="text" name="name" value="someName"></td>
-         </tr>
-        <tr>
-            <td class="label">Email</td><td> <input type="text" name="email" value="someName@gmail.com"></td>
-         </tr>
-          <tr>
-            <td class="label">Due Date</td><td> <input type="date" name="date" value="2017/08/25"></td>
-         </tr>
-     </table>
-
-    <table class="line_items" id = "lit" cellpadding="11">
-        <tr>
-            <td class="label">Description</td> <td class="label">Amount</td>
-        </tr>
-        <tr>
-            <td> <input type="text" name="description[]" value="someDesc"></td> <td> <input type="text" name="amount[]" class="amount" value="10"></td>
-        </tr> 
-    </table>
-    
-    <br>
-    <button type="button" title="Add">Add</button>
-    <br>    
-    <br/>Total:
-    <input type="text" id="total" />
-    <br>
-    <input type="button" value="Save" onClick="saveUser()">
-
-    
-    </form>
-</div>
-<div class="page-data">
-     <ul class="err-area"></ul>
-</div>
-
-<script>
 
 //Add and Cut LineItems
 $(document).ready(function() {  
@@ -140,6 +90,3 @@ function addrow(tableID) {
         });
     }
 
-</script>
-</body>
-</html>
