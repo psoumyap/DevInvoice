@@ -4,7 +4,6 @@ var express  = require('express'),
     app = express(),
     expressValidator = require('express-validator');
 
-
 /*Set EJS template Engine*/
 app.set('views','./views');
 app.set('view engine','ejs');
@@ -17,6 +16,14 @@ app.use(expressValidator());
 /*MySql connection*/
 var connection  = require('express-myconnection'),
     mysql = require('mysql');
+
+var pool  = mysql.createPool({
+  host     : 'localhost',
+  user     : 'root',
+  password : 'mysql',
+  database : 'invoice',
+  debug    : false //set true if you wanna see debug logger
+});
 
 app.use(
 
@@ -97,64 +104,53 @@ curut.post(function(req,res,next){
     var data1 = {
         name:req.body.name,
         email:req.body.email,
-        duedate:req.body.duedate
+        duedate:req.body.date
      };
 
      var data2 = {
         description:req.body.description,
-        amount:req.body.amount
+        amount:req.body.amount,
+        user_ID: 0
      };
 
     //inserting into mysql
-    req.getConnection(function (err, conn){
+    pool.getConnection(function (err, conn){
 
-        var userExists =false;
+        var existingUserId;
 
         if (err) return next("Cannot Connect");
 
-        var selquery1 = conn.query("SELECT USER_ID FROM t_user WHERE email = ? ",[data1.email], function(err,rows){
+        var selquery2 = conn.query("SELECT USER_ID FROM t_user WHERE email = ? ",[data1.email], function(err, rows, fields) {
+          if (err) throw err;
 
-            if(err){
-                console.log(err);
-                return next("Mysql error, check your query");
-            } else {
-                console.log("you re in elsesss", rows);
-
-                if (rows.length > 0) {
-                console.log("you re in elsesss", rows);
-                userExists = true;
-                data2.user_ID= rows[1].USER_ID;
-            }
-            }
-        });
-
-        if ( !userExists ) {
-        var query1 = conn.query("INSERT INTO t_user set ? ",data1, function(err, rows){
-           if(err){
-                console.log(err);
-                return next("Mysql error, check your query");
+          if (rows.length == 0) {
+            var insertUserQuery = conn.query("INSERT INTO t_user set ? ",data1, function(err, result){
+               if(err){
+                    console.log(err);
+                    return next("Mysql error, check your query");
+               } else {
+                console.log("User inserted.");
+               }
+              console.log('result.insertId ', result.insertId)
+              existingUserId = result.insertId;
+           },function (err) {
+             conn.end();
+           });
            } else {
-            console.log("User inserted.");
-           }
-       });
-    }
+              existingUserId = rows[0].USER_ID;
+            }
+            console.log('User ID : ', existingUserId);
+          });
 
-        
-        //var user_id = conn.query("SELECT LAST_INSERT_ID()");
-
-
-        var query2 = conn.query("INSERT INTO t_lineitems set ? ", data2, function(err, rows){
-           console.log("data2 : ", data2);
-
+        var T_LINEITEMS_QUERY = "INSERT INTO T_LINEITEMS (user_ID, description, amount) VALUES (?, ?, ?)";
+        var query2 = conn.query(T_LINEITEMS_QUERY, [existingUserId, data2.description, data2.amount], function(err, rows){
+          console.log('User ID 2 : ', existingUserId);
            if(err){
                 console.log(err);
                 return next("Mysql error, check your query");
            }
-
-        // res.sendStatus(200);
         });
         res.sendStatus(200);
-
 });
 });
 
@@ -166,7 +162,6 @@ var curut2 = router.route('/user/:user_id');
 route.all is extremely useful. you can use it to do
 stuffs for specific routes. for example you need to do
 a validation everytime route /api/user/:user_id it hit.
-
 remove curut2.all() if you dont want it
 ------------------------------------------------------*/
 curut2.all(function(req,res,next){
