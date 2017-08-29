@@ -109,54 +109,48 @@ curut.post(function(req,res,next){
 
      var data2 = {
         description:req.body.description,
-        amount:req.body.amount
+        amount:req.body.amount,
+        user_ID: 0
      };
 
     //inserting into mysql
     pool.getConnection(function (err, conn){
 
-        var userExists =false;
+        var existingUserId;
 
         if (err) return next("Cannot Connect");
 
-
-        var selquery2 =
-
-        conn.query("SELECT USER_ID FROM t_user WHERE email = ? ",[data1.email], function(err, rows, fields) {
+        var selquery2 = conn.query("SELECT USER_ID FROM t_user WHERE email = ? ",[data1.email], function(err, rows, fields) {
           if (err) throw err;
 
           if (rows.length == 0) {
-            console.log("User doesnt exist, insert user.");
-
-            var insertUserQuery = conn.query("INSERT INTO t_user set ? ",data1, function(err, rows){
+            var insertUserQuery = conn.query("INSERT INTO t_user set ? ",data1, function(err, result){
                if(err){
                     console.log(err);
                     return next("Mysql error, check your query");
                } else {
                 console.log("User inserted.");
                }
+              console.log('result.insertId ', result.insertId)
+              existingUserId = result.insertId;
            },function (err) {
              conn.end();
            });
-
            } else {
-              console.log('User Exists : ', rows);
+              existingUserId = rows[0].USER_ID;
             }
-
+            console.log('User ID : ', existingUserId);
           });
 
-        var query2 = conn.query("INSERT INTO t_lineitems set ? ", data2, function(err, rows){
-           console.log("data2 : ", data2);
-
+        var T_LINEITEMS_QUERY = "INSERT INTO T_LINEITEMS (user_ID, description, amount) VALUES (?, ?, ?)";
+        var query2 = conn.query(T_LINEITEMS_QUERY, [existingUserId, data2.description, data2.amount], function(err, rows){
+          console.log('User ID 2 : ', existingUserId);
            if(err){
                 console.log(err);
                 return next("Mysql error, check your query");
            }
-
-        // res.sendStatus(200);
         });
         res.sendStatus(200);
-
 });
 });
 
