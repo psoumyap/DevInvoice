@@ -55,7 +55,7 @@ router.use(function(req, res, next) {
 
 var curut = router.route('/user');
 
-//show the CRUD interface | GET
+// GET
 curut.get(function(req, res, next) {
   req.getConnection(function(err, conn) {
     console.log(err);
@@ -95,11 +95,14 @@ curut.post(function(req, res, next) {
     duedate: req.body.date
   };
 
+
+var i=0;
   var data2 = {
-    description: req.body.description,
-    amount: req.body.amount,
+    description: req.body.description[i],
+    amount: req.body.amount[i],
     user_ID: 0
   };
+
 
   //inserting into mysql
   pool.getConnection(function(err, conn) {
@@ -125,8 +128,11 @@ curut.post(function(req, res, next) {
         existingUserId = rows[0].USER_ID;
       }
       console.log('User ID : ', existingUserId);
-    });
+});
 
+    var query = conn.query('SELECT * FROM t_user', function(err, rows) {
+    for (;i<rows.length;i++)
+    {
     var T_LINEITEMS_QUERY = "INSERT INTO T_LINEITEMS (user_ID, description, amount) VALUES (?, ?, ?)";
     var query2 = conn.query(T_LINEITEMS_QUERY, [existingUserId, data2.description, data2.amount], function(err, rows) {
       console.log('User ID 2 : ', existingUserId);
@@ -135,21 +141,21 @@ curut.post(function(req, res, next) {
         return next("Mysql error, check your query");
       }
     });
+  }
+});
     res.sendStatus(200);
   });
 });
+//});
 
 //now for Single route (GET,DELETE,PUT)
 var curut2 = router.route('/user/:user_id');
 
 /*------------------------------------------------------
 route.all is extremely useful. you can use it to do
-stuffs for specific routes. for example you need to do
-a validation everytime route /api/user/:user_id it hit.
-remove curut2.all() if you dont want it
+stuffs for specific routes. 
 ------------------------------------------------------*/
 curut2.all(function(req, res, next) {
-  console.log("You need to smth about curut2 Route ? Do it here");
   console.log(req.params);
   next();
 });
@@ -182,7 +188,6 @@ curut2.put(function(req, res, next) {
   //validation
   req.assert('name', 'Name is required').notEmpty();
   req.assert('email', 'A valid email is required').isEmail();
-  req.assert('password', 'Enter a password 6 - 20').len(6, 20);
 
   var errors = req.validationErrors();
   if (errors) {
@@ -193,8 +198,7 @@ curut2.put(function(req, res, next) {
   //get data
   var data = {
     name: req.body.name,
-    email: req.body.email,
-    password: req.body.password
+    email: req.body.email
   };
 
   //inserting into mysql
