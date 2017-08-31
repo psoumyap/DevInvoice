@@ -107,6 +107,7 @@ var i=0;
   //inserting into mysql
   pool.getConnection(function(err, conn) {
     var existingUserId;
+    var T_LINEITEMS_QUERY = "INSERT INTO T_LINEITEMS (user_ID, description, amount) VALUES (?, ?, ?)";
     if (err) return next("Cannot Connect");
 
     var selquery2 = conn.query("SELECT USER_ID FROM t_user WHERE email = ? ", [data1.email], function(err, rows, fields) {
@@ -119,29 +120,24 @@ var i=0;
           } else {
             console.log("User inserted.");
           }
-          console.log('result.insertId ', result.insertId)
-          existingUserId = result.insertId;
+          var insertLineItem1 = conn.query(T_LINEITEMS_QUERY, [result.insertId, data2.description, data2.amount], function(err, rows) {
+            if (err) {
+              console.log(err);
+              return next("Mysql error, check your query");
+            }
+          });
         }, function(err) {
           conn.end();
-        });
+        }
+      );
       } else {
-        existingUserId = rows[0].USER_ID;
+        var insertLineItem2 = conn.query(T_LINEITEMS_QUERY, [rows[0].USER_ID, data2.description, data2.amount], function(err, rows) {
+          if (err) {
+            console.log(err);
+            return next("Mysql error, check your query");
+          }
+        });
       }
-      console.log('User ID : ', existingUserId);
-});
-
-    var query = conn.query('SELECT * FROM t_user', function(err, rows) {
-    for (;i<rows.length;i++)
-    {
-    var T_LINEITEMS_QUERY = "INSERT INTO T_LINEITEMS (user_ID, description, amount) VALUES (?, ?, ?)";
-    var query2 = conn.query(T_LINEITEMS_QUERY, [existingUserId, data2.description, data2.amount], function(err, rows) {
-      console.log('User ID 2 : ', existingUserId);
-      if (err) {
-        console.log(err);
-        return next("Mysql error, check your query");
-      }
-    });
-  }
 });
     res.sendStatus(200);
   });
@@ -153,7 +149,7 @@ var curut2 = router.route('/user/:user_id');
 
 /*------------------------------------------------------
 route.all is extremely useful. you can use it to do
-stuffs for specific routes. 
+stuffs for specific routes.
 ------------------------------------------------------*/
 curut2.all(function(req, res, next) {
   console.log(req.params);
