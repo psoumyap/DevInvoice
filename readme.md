@@ -1,6 +1,6 @@
 This is simple html based invoice.
 
-A simple rest based Node JS is created using Express framework
+A simple rest API is created based on Node JS and Express framework
 
 Installation steps are mentioned below
 
