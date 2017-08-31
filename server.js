@@ -120,48 +120,36 @@ var i=0;
           } else {
             console.log("User inserted.");
           }
-
-          for (i=0; i< req.body.amount.length; i++ ) {
-            var data2 = {
-              description: req.body.description[i],
-              amount: req.body.amount[i],
-              user_ID: 0
-            };
-            var insertLineItem1 = conn.query(T_LINEITEMS_QUERY, [result.insertId, data2.description, data2.amount], function(err, rows) {
-              if (err) {
-                console.log(err);
-                return next("Mysql error, check your query");
-              }
-            });
-          }
+        insertLineItems(result.insertId, req, conn, T_LINEITEMS_QUERY);
         }, function(err) {
           conn.end();
         }
       );
       } else {
-        
-      // building the lineItems array
-      var i=0;
-      for (i=0; i< req.body.amount.length; i++ ) {
-        var data2 = {
-          description: req.body.description[i],
-          amount: req.body.amount[i],
-          user_ID: 0
-        };
-
-        var insertLineItem2 = conn.query(T_LINEITEMS_QUERY, [rows[0].USER_ID, data2.description, data2.amount], function(err, rows) {
-          if (err) {
-            console.log(err);
-            return next("Mysql error, check your query");
-          }
-        });
-      }
+        // building the lineItems array
+        insertLineItems(rows[0].USER_ID, req, conn, T_LINEITEMS_QUERY);
       }
 });
     res.sendStatus(200);
   });
 });
 //});
+
+function insertLineItems(userId, req, conn, query) {
+  for (i=0; i< req.body.amount.length; i++ ) {
+    var data2 = {
+      description: req.body.description[i],
+      amount: req.body.amount[i],
+      user_ID: 0
+    };
+    var insertLineItem1 = conn.query(query, [userId, data2.description, data2.amount], function(err, rows) {
+      if (err) {
+        console.log(err);
+        return next("Mysql error, check your query");
+      }
+    });
+  }
+}
 
 //now for Single route (GET,DELETE,PUT)
 var curut2 = router.route('/user/:user_id');
