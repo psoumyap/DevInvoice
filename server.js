@@ -120,23 +120,42 @@ var i=0;
           } else {
             console.log("User inserted.");
           }
-          var insertLineItem1 = conn.query(T_LINEITEMS_QUERY, [result.insertId, data2.description, data2.amount], function(err, rows) {
-            if (err) {
-              console.log(err);
-              return next("Mysql error, check your query");
-            }
-          });
+
+          for (i=0; i< req.body.amount.length; i++ ) {
+            var data2 = {
+              description: req.body.description[i],
+              amount: req.body.amount[i],
+              user_ID: 0
+            };
+            var insertLineItem1 = conn.query(T_LINEITEMS_QUERY, [result.insertId, data2.description, data2.amount], function(err, rows) {
+              if (err) {
+                console.log(err);
+                return next("Mysql error, check your query");
+              }
+            });
+          }
         }, function(err) {
           conn.end();
         }
       );
       } else {
+        
+      // building the lineItems array
+      var i=0;
+      for (i=0; i< req.body.amount.length; i++ ) {
+        var data2 = {
+          description: req.body.description[i],
+          amount: req.body.amount[i],
+          user_ID: 0
+        };
+
         var insertLineItem2 = conn.query(T_LINEITEMS_QUERY, [rows[0].USER_ID, data2.description, data2.amount], function(err, rows) {
           if (err) {
             console.log(err);
             return next("Mysql error, check your query");
           }
         });
+      }
       }
 });
     res.sendStatus(200);
